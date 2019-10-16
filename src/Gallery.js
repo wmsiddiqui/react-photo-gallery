@@ -15,9 +15,11 @@ const Gallery = React.memo(function Gallery({
   targetRowHeight,
   columns,
   renderImage,
+  onLoadCallback,
 }) {
   const [containerWidth, setContainerWidth] = useState(0);
   const galleryEl = useRef(null);
+  let loadedCount = 0;
 
   useLayoutEffect(() => {
     let animationFrameID = null;
@@ -47,6 +49,14 @@ const Gallery = React.memo(function Gallery({
       next: photos[index + 1] || null,
     });
   };
+
+  const onImageLoaded = () => {
+    loadedCount++;
+    if (onLoadCallback && typeof onLoadCallback === 'function' && loadedCount === photos.length)
+    {
+      onLoadCallback();
+    }
+  }
 
   // no containerWidth until after first render with refs, skip calculations and render nothing
   if (!containerWidth) return <div ref={galleryEl}>&nbsp;</div>;
@@ -106,6 +116,7 @@ const Gallery = React.memo(function Gallery({
             direction,
             onClick: onClick ? handleClick : null,
             photo,
+            onImageLoaded,
           });
         })}
       </div>
@@ -122,6 +133,7 @@ Gallery.propTypes = {
   limitNodeSearch: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   margin: PropTypes.number,
   renderImage: PropTypes.func,
+  onLoadCallback: PropTypes.func,
 };
 
 Gallery.defaultProps = {
