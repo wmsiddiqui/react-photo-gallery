@@ -52,11 +52,10 @@ const Gallery = React.memo(function Gallery({
 
   const onImageLoaded = () => {
     loadedCount++;
-    if (onLoadCallback && typeof onLoadCallback === 'function' && loadedCount === photos.length)
-    {
+    if (onLoadCallback && typeof onLoadCallback === 'function' && loadedCount === photos.length) {
       onLoadCallback();
     }
-  }
+  };
 
   // no containerWidth until after first render with refs, skip calculations and render nothing
   if (!containerWidth) return <div ref={galleryEl}>&nbsp;</div>;
